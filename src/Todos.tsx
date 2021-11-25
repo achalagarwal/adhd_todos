@@ -84,12 +84,23 @@ function Todos() {
       .catch((err) => console.log(err));
 
 
-      // fetch("/todo/archive")
     }
     else {
       // ongoingArchivedToggle == "archived"
-      setTodos([archivedTodos[index], ...todos]);
-      setArchivedTodos(archivedTodos.filter((_, i) => i != index));
+      const todo = archivedTodos[index];
+
+      fetch("/todo/unarchive", {
+        method: 'POST',
+        body: JSON.stringify([todo]),
+        headers: {'Content-Type': 'application/json'}
+      })
+      .then(response => response.json())
+      .then(_ => {
+        setTodos([archivedTodos[index], ...todos]);
+        setArchivedTodos(archivedTodos.filter((_, i) => i != index));
+      })
+      .catch((err) => console.log(err));
+
 
     }
   }
